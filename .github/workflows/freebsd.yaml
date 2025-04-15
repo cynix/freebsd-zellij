@@ -43,6 +43,7 @@ jobs:
             [dependencies.value-bag]
             version = "1.10.0"
           EOF
+          sed -i -e '/sysinfo/s/, default-features = false//' zellij-server/Cargo.toml
           docker run --rm -v $(pwd):/work -e BUILDER_UID=$(id -u) -e BUILDER_GID=$(id -g) -e BUILDER_USER=$(id -un) -e BUILDER_GROUP=$(id -gn) -e FREEBSD_TARGET=${{ matrix.target.arch }} ghcr.io/cynix/dockcross-freebsd env CARGO_PROFILE_RELEASE_STRIP=true cargo build --release ${{ matrix.target.cargo_args }}
           tar -C target/${{ matrix.target.triple }}/release/ -zcf zellij-${{ needs.calculate.outputs.tag }}-${{ matrix.target.triple }}.tar.gz --numeric-owner --owner=0 --group=0 ./zellij
 
